@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getChatResponse, getInitialMessage } from '../services/chatService';
 import '../styles/Chatbot.css';
 
 interface Message {
@@ -13,6 +14,10 @@ const Chatbot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setMessages([{ text: getInitialMessage(), isUser: false }]);
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -32,16 +37,8 @@ const Chatbot = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message: input }),
-      });
-
-      const data = await response.json();
-      setMessages(prev => [...prev, { text: data.response, isUser: false }]);
+      const response = await getChatResponse(input);
+      setMessages(prev => [...prev, { text: response, isUser: false }]);
     } catch (error) {
       console.error('Error:', error);
       setMessages(prev => [...prev, { text: 'Sorry, something went wrong. Please try again.', isUser: false }]);
