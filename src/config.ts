@@ -1,34 +1,8 @@
 export const CHAT_PRIMERS = {
-  academic: {
-    greeting: "Hello! I'm your academic advisor chatbot. I can help you understand N Devharish's academic background, research interests, and educational achievements. What would you like to know?",
-    questions: [
-      "What are your research interests?",
-      "Tell me about your educational background",
-      "What academic achievements are you most proud of?",
-      "What are your areas of expertise?",
-      "What academic projects have you worked on?"
-    ]
-  },
-  professional: {
-    greeting: "Hello! I'm your professional career advisor. I can help you understand N Devharish's work experience, skills, and professional achievements. How can I assist you today?",
-    questions: [
-      "What is your work experience?",
-      "What are your key professional skills?",
-      "Tell me about your career achievements",
-      "What industries have you worked in?",
-      "What are your professional goals?"
-    ]
-  },
-  personal: {
-    greeting: "Hi there! I'm here to help you get to know N Devharish better. I can tell you about their interests, hobbies, and personal background. What would you like to know?",
-    questions: [
-      "What are your main interests?",
-      "Tell me about your hobbies",
-      "What drives you personally?",
-      "What are your personal achievements?",
-      "How do you spend your free time?"
-    ]
-  }
+  greeting: "Hello! I'm your CV chatbot. How can I help you today?",
+  professional: "I have experience in software development, focusing on web technologies and AI.",
+  academic: "I hold a degree in Computer Science with a focus on artificial intelligence.",
+  personal: "In my free time, I enjoy coding, reading tech blogs, and contributing to open-source projects."
 };
 
 export const CHAT_THEMES = {

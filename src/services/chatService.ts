@@ -58,13 +58,6 @@ export class ChatService {
   }
 }
 
-const CHAT_PRIMERS = {
-  greeting: "Hello! I'm your CV chatbot. How can I help you today?",
-  professional: "I have experience in software development, focusing on web technologies and AI.",
-  academic: "I hold a degree in Computer Science with a focus on artificial intelligence.",
-  personal: "In my free time, I enjoy coding, reading tech blogs, and contributing to open-source projects."
-};
-
 export const getChatResponse = async (message: string): Promise<string> => {
   try {
     const response = await fetch('http://localhost:5000/chat', {
