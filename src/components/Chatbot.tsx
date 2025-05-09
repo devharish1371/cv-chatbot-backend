@@ -1,93 +1,88 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getChatResponse, getInitialMessage } from '../services/chatService';
-import '../styles/Chatbot.css';
 
 interface Message {
   text: string;
   isUser: boolean;
 }
 
-const Chatbot = () => {
+const Chatbot: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setMessages([{ text: getInitialMessage(), isUser: false }]);
+    const initialMessage = getInitialMessage();
+    setMessages([{ text: initialMessage, isUser: false }]);
   }, []);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   useEffect(() => {
-    scrollToBottom();
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!inputValue.trim()) return;
 
-    const userMessage = { text: input, isUser: true };
+    const userMessage: Message = { text: inputValue, isUser: true };
     setMessages(prev => [...prev, userMessage]);
-    setInput('');
-    setIsLoading(true);
+    setInputValue('');
 
     try {
-      const response = await getChatResponse(input);
+      const response = await getChatResponse(userMessage.text);
       setMessages(prev => [...prev, { text: response, isUser: false }]);
     } catch (error) {
       console.error('Error:', error);
       setMessages(prev => [...prev, { text: 'Sorry, something went wrong. Please try again.', isUser: false }]);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
-    <div className="chat-container">
-      <div className="chat-header">
-        <button onClick={() => navigate('/')} className="back-btn">
+    <div className="flex flex-col h-screen bg-gray-100">
+      <div className="bg-white shadow-md p-4 flex items-center">
+        <button 
+          onClick={() => navigate('/')} 
+          className="text-gray-600 hover:text-gray-900 mr-4"
+        >
           ← Back
         </button>
-        <h2>Chat with Me</h2>
+        <h2 className="text-xl font-semibold text-gray-900">Chat with Me</h2>
       </div>
 
-      <div className="messages-container">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`message ${message.isUser ? 'user-message' : 'bot-message'}`}
+            className={`max-w-[80%] rounded-lg p-4 ${
+              message.isUser 
+                ? 'bg-blue-500 text-white ml-auto' 
+                : 'bg-white text-gray-900 shadow-md'
+            }`}
           >
             {message.text}
           </div>
         ))}
-        {isLoading && (
-          <div className="message bot-message">
-            <div className="typing-indicator">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </div>
-        )}
         <div ref={messagesEndRef} />
       </div>
 
-      <form onSubmit={handleSubmit} className="input-container">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Type your message..."
-          disabled={isLoading}
-        />
-        <button type="submit" disabled={isLoading}>
-          Send
-        </button>
+      <form onSubmit={handleSubmit} className="bg-white p-4 shadow-md">
+        <div className="flex space-x-4">
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            placeholder="Type your message..."
+            className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button 
+            type="submit" 
+            className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors duration-200"
+          >
+            Send
+          </button>
+        </div>
       </form>
     </div>
   );
