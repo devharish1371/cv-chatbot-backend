@@ -14,10 +14,11 @@ module.exports = defineConfig({
   },
   server: {
     port: 3000,
-    open: true
+    strictPort: true,
   },
   build: {
     outDir: 'dist',
-    sourcemap: true
+    assetsDir: 'assets',
+    sourcemap: true,
   }
 }); 
